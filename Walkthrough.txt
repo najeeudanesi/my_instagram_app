@@ -1,0 +1,7 @@
+#installation
+1. npx create-next-app -e with-tailwindcss my_instagram_app 
+
+
+2. cd my_instagram_app
+
+summary: nextjs and tailwind css are to be used to create responsive app
