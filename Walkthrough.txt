@@ -1,7 +1,19 @@
 #installation
-1. npx create-next-app -e with-tailwindcss my_instagram_app 
+1. $npx create-next-app -e with-tailwindcss my_instagram_app 
 
 
-2. cd my_instagram_app
+2. $cd my_instagram_app then npm run dev
+
+3. install heroicons   $npm install @heroicons/react
+
+4. install tailwindcss forms $npm install @tailwindcss/forms
 
 summary: nextjs and tailwind css are to be used to create responsive app
+
+#config
+1. add   images:{
+    domains:["https://links.papareact.com"]
+  }
+  inside module.exports in next.config.js file then restart server
+
+2. add  require("@tailwindcss/forms") to plugins array in tailwind.config.js file
