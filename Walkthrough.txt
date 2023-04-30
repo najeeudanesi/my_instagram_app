@@ -8,6 +8,8 @@
 
 4. install tailwindcss forms $npm install @tailwindcss/forms
 
+5. install faker $npm i faker
+
 summary: nextjs and tailwind css are to be used to create responsive app
 
 #config

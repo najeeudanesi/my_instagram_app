@@ -12,7 +12,7 @@ import {
 
 export default function Header() {
   return (
-    <div>
+    <div className="shadow-sm bg-white border-b z-50 sticky top-0">
 
       <div className="flex justify-between max-w-6xl mx-5 lg:mx-auto">
 
@@ -44,11 +44,20 @@ export default function Header() {
         <div className=" flex items-center justify-end space-x-4">
           <HomeIcon className="navBtn"/>
           <Bars4Icon className="h-6 w-6 md:hidden cursor-pointer"/>
-          <PaperAirplaneIcon className="navBtn -rotate-90"/>
+          <div className="relative navBtn">
+
+              <PaperAirplaneIcon className="navBtn -rotate-45"/>
+              <div className="absolute -top-1 -right-1 text-xs w-4 bg-red-600 rounded-full text-white 
+              flex items-center justify-center
+              ">3</div>
+          </div>
+          
           <GlobeAltIcon className="navBtn"/>
           <PlusCircleIcon className="navBtn"/>
           <HeartIcon className="navBtn"/>
-        
+            
+          <img src="https://images.unsplash.com/photo-1507081323647-4d250478b919?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzN8fG1hbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60" alt="profile pic" 
+          className="h-10  w-10 rounded-full hover:cursor-pointer"/>
         </div>
       </div>
     </div>
