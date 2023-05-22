@@ -1,5 +1,8 @@
 import React from "react";
 import Stories from "./Stories";
+import Posts from "./Posts";
+import Miniprofile from "./Miniprofile";
+import { Suggestions } from "./Suggestions";
 
 export default function Feed() {
   return (
@@ -9,13 +12,17 @@ export default function Feed() {
         <section className="col-span-2">
           
           <Stories />
-          {/* Posts */}
+        <Posts/>
         </section>
 
         {/* Section */}
-        <section>
-          {/* mini profile */}
-          {/* suggestions */}
+        <section className="hidden xl:inline-grid md:col-span-1">
+
+          <div className="fixed top-20">
+          <Miniprofile/>
+          <Suggestions/>
+          </div>
+          
         </section>
       </main>
     </div>
