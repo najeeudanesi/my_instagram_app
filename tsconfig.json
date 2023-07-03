@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/auth/[...nextauth].js", "pages/auth/signin.js", "pages/index.tsx", "pages/_app.tsx", "components/Post.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/auth/[...nextauth].js", "pages/auth/signin.js", "pages/index.js", "pages/_app.js", "components/Post.js", "components/Miniprofile.js", "components/Header.js", "components/Stories.js", "components/Posts.js", "components/Story.js", "components/Suggestions.js", "components/Modal.js", "components/Feed.js", "atoms/modalAtom.js"],
   "exclude": ["node_modules"]
 }

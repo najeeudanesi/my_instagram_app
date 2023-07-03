@@ -1,10 +1,10 @@
-import type { NextPage } from 'next'
+// import { NextPage } from 'next'
 import Head from 'next/head'
 import Feed from '../components/Feed'
 import Header from '../components/Header'
 // import Modal from '../components/modal'
 
-const Home: NextPage = () => {
+const Home= () => {
   return (
     <div className="">
       <Head>
