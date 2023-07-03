@@ -8,11 +8,11 @@ import {
     HeartIcon,
     PaperAirplaneIcon,
 } from "@heroicons/react/24/outline"
-import {
+// import {
    
-    HeartIcon as HeartIconFilled,
+//     HeartIcon as HeartIconFilled,
    
-} from "@heroicons/react/24/solid"
+// } from "@heroicons/react/24/solid"
 
 function Post({ id, username, img, caption, userImg }) {
   return (
