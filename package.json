@@ -6,12 +6,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.16",
     "@tailwindcss/forms": "^0.5.3",
     "faker": "^6.6.6",
+    "firebase": "^9.22.2",
     "next": "latest",
+    "next-auth": "^4.22.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
