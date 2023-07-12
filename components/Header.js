@@ -11,19 +11,25 @@ import {
 import { HomeIcon } from "@heroicons/react/24/solid";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { modalState } from "../atoms/modalAtom";
-import { useRecoilState} from 'recoil'
+import Modal from "./Modal";
+import { Fragment, useState } from "react";
+// import { modalState } from "../atoms/modalAtom";
+// import { useRecoilState} from 'recoil'
 
 export default function Header() {
   const { data: session } = useSession();
+  // const [open, setOpen] = useRecoilState(modalState);
+
+  const [open, setOpen] = useState(false);
   const router = useRouter();
-  const [open, setOpen] = useRecoilState(modalState);
+
 
   return (
+    <Fragment>
     <div className="shadow-sm bg-white border-b z-50 sticky top-0">
-      <div onClick={() => router.push('/')} className="flex justify-between max-w-6xl mx-5 lg:mx-auto">
+      <div  className="flex justify-between max-w-6xl mx-5 lg:mx-auto">
         {/*ig logo*/}
-        <div className="relative hidden lg:inline-grid w-24 cursor-pointer">
+        <div onClick={() => router.push('/')} className="relative hidden lg:inline-grid w-24 cursor-pointer">
           <Image
             src="https://links.papareact.com/ocw"
             layout="fill"
@@ -89,7 +95,11 @@ export default function Header() {
             <button onClick={signIn}>Sign in</button>
           )}
         </div>
+        <Modal isvisible={open} onClose={ () => setOpen(false)}/>
       </div>
+
+      
     </div>
+    </Fragment>
   );
 }
