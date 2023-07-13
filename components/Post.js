@@ -8,20 +8,23 @@ import {
   PaperAirplaneIcon,
 } from "@heroicons/react/24/outline";
 import { addDoc, onSnapshot, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { collection, serverTimestamp } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import  Moment  from 'react-moment'
+import { onAuthStateChanged } from "firebase/auth";
 // import {
 
 //     HeartIcon as HeartIconFilled,
 
 // } from "@heroicons/react/24/solid"
 
-function Post({ id, username, img, caption, userImg }) {
-  const { data: session } = useSession();
+function Post({ id, username, img, caption, userImg}) {
+
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [ user, setUser ] = useState(null);
 
   useEffect(
     () =>
@@ -34,6 +37,16 @@ function Post({ id, username, img, caption, userImg }) {
       ),
     [db]
   );
+
+  useEffect (() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      }else {
+        setUser(null);
+      }
+    })
+  })
   const sendComment = async (e) => {
     e.preventDefault();
 
@@ -42,8 +55,8 @@ function Post({ id, username, img, caption, userImg }) {
 
     await addDoc(collection(db, "posts", id, "comments"), {
       comment: commentToSend,
-      username: session.user.username,
-      userImage: session.user.image,
+      username: user.displayName,
+      userImage: user.photoURL,
       timestamp: serverTimestamp(),
     });
   };
@@ -61,7 +74,7 @@ function Post({ id, username, img, caption, userImg }) {
         <EllipsisHorizontalIcon className="h-5" />
       </div>
       <img src={img} className="object-cover w-full max-h-screen " alt="" />
-      {session && (
+      {user && (
         <div className="flex justify-between px-4 pt-4">
           <div className="flex space-x-4">
             <HeartIcon className="btn" />
@@ -88,12 +101,15 @@ function Post({ id, username, img, caption, userImg }) {
               <img className="h-7 w-7 rounded-full" src={comment.data().userImage} alt="" />
               <span className="font-semibold"> {comment.data().username}</span>
               <p>{comment.data().comment}</p>
+              <Moment fromNow className="pr-5 text-xs text-gray-700">
+                {comment.data().timestamp?.toDate()}
+              </Moment>
             </div>
           ))}
           </div>
         )}
 
-      {session && (
+      {user && (
         <form className="flex items-center p-4">
           <FaceSmileIcon className="h-7" />
           <input

@@ -24,7 +24,7 @@ import { db } from '../firebase';
 // },
 // ];
 
-function Posts() {
+function Posts(user) {
 
   const [posts, setPosts] = useState([]);
 
@@ -43,6 +43,7 @@ function Posts() {
             userImg={post.data().profileImg}
             img={post.data().image}
             caption={post.data().captionRef}
+         
             />
            ))}
         </div>

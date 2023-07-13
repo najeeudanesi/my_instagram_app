@@ -9,20 +9,36 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { HomeIcon } from "@heroicons/react/24/solid";
-import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Modal from "./Modal";
-import { Fragment, useState } from "react";
-// import { modalState } from "../atoms/modalAtom";
-// import { useRecoilState} from 'recoil'
+import { Fragment, useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { app } from "../firebase";
+
 
 export default function Header() {
-  const { data: session } = useSession();
-  // const [open, setOpen] = useRecoilState(modalState);
+
+  const auth = getAuth(app);
 
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const [user, setUser] = useState(null);
 
+
+
+  useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUser(user);
+    } else {
+      setUser(null);
+    }
+    
+  });
+  return () => {
+    unsubscribe();
+  }
+  }, [])
 
   return (
     <Fragment>
@@ -67,7 +83,7 @@ export default function Header() {
           <HomeIcon onClick={() => router.push('/')} className="navBtn" />
           <Bars4Icon className="h-6 w-6 md:hidden cursor-pointer" />
 
-          {session ? (
+          {user ? (
             <>
               <div className="relative navBtn">
                 <PaperAirplaneIcon className="navBtn -rotate-45" />
@@ -85,14 +101,14 @@ export default function Header() {
               <HeartIcon className="navBtn" />
 
               <img
-                onClick={signOut}
-                src={session?.user?.image}
+                onClick={() => router.push('/user/profile')}
+                // src={session?.user?.image}
                 alt="profile pic"
                 className="h-10  w-10 rounded-full hover:cursor-pointer"
               />
             </>
           ) : (
-            <button onClick={signIn}>Sign in</button>
+            <button onClick={() => router.push('/auth/signin')}>Sign in</button>
           )}
         </div>
         <Modal isvisible={open} onClose={ () => setOpen(false)}/>
