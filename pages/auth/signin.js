@@ -35,22 +35,22 @@ function SignIn({ providers }) {
       <div className='flex flex-col items-center justify-center min-h-screen py-2 -mt-16 px-14 text-center'>
         <img className='w-80' src='https://links.papareact.com/ocw' alt='instagram' />
         <p className='font-xs italic'>This is najiu's version of Instagram</p>
-        <div className='mt-40'>
+        <div className='mt-32 '>
           <input
             type='email'
             placeholder='Email'
-            className='mb-4 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500'
+            className='mb-4 px-4 py-3 mx-4 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 w-1/2'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type='password'
             placeholder='Password'
-            className='mb-4 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500'
+            className='mb-4 px-4 py-3 mx-4 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 w-1/2'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className='p-3 bg-blue-500 rounded-lg text-white' onClick={handleSignIn}>
+          <button className='p-3 bg-blue-500 mx-4 rounded-lg text-white w-1/2' onClick={handleSignIn}>
             Sign in
           </button>
         </div>

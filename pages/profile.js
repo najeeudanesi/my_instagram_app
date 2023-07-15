@@ -1,18 +1,66 @@
-import  { useEffect, useState } from 'react';
+import  { useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged, signInWithEmailAndPassword, updatePassword, updateProfile } from 'firebase/auth';
 import { useRouter } from 'next/router';
-import { auth } from '../../firebase';
-import Header from '../../components/Header';
+import { auth, db, storage } from '../firebase';
+import Header from '../components/Header';
+import {ref, getDownloadURL, uploadString} from "@firebase/storage";
+import { addDoc, collection } from 'firebase/firestore';
 
 const Profile = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const  [oldPassword, setOldPassword] = useState('');
   const [email, setEmail] = useState('');
   const [user, setUser] = useState(null);
   const router = useRouter();
+  const filePickerRef = useRef(null);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarColor, setSnackbarColor] = useState('');
 
 
+
+
+  const updateImage = async (e) => {
+
+    
+
+  const docRef = await addDoc(collection(db, "user_images"), {
+    email: email,
+  })
+
+  const imagRef = ref(storage, `user_images/${docRef.id}/image`);
+
+  if (selectedFile){
+    await uploadString(imagRef, selectedFile, "data_url").then(async snapshot => {
+      const downloadURL = await getDownloadURL(imagRef);
+      await  updateProfile((user), {
+       photoURL: downloadURL,
+    }).then(() => {
+        console.log("image updated successfully")
+        
+    })
+    })
+  }
+    setSelectedFile(null);
+
+  }  
+  
+  const timeOut = setTimeout(() => {
+    setShowSnackbar(false);
+  }, 2000);
+
+  const addImage = (e) => {
+    const reader = new FileReader();
+
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+
+    reader.onload = (readerEvent) => {
+      setSelectedFile(readerEvent.target.result);
+    };
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,6 +74,8 @@ const Profile = () => {
         })
      } catch (error) {
         console.error(error)
+        setShowSnackbar(true);
+        setSnackbarColor('red');
         return;
     }
 }
@@ -33,18 +83,28 @@ const Profile = () => {
         await  updateProfile((user), {
             displayName: username,
             email: email,  
-        }).then(() => {
-            console.log("updated successfully")
         })
+
+        await updateImage().then(() =>{
+            console.log("image updated successfully")
+            setShowSnackbar(true);
+            setSnackbarColor('green');
+            
+        });
     }catch(error){
         console.error(error)
+
+        setShowSnackbar(true);
+        setSnackbarColor('red');
+        
+
     }
 
-    router.push('/');
+    
+    router.push('/')
+    setUser(user);
     
   };
-
-  
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -52,6 +112,7 @@ const Profile = () => {
         setUser(user);
         setUsername(user.displayName || '');
         setEmail(user.email || '');
+        
       } else {
         setUser(null);
          router.push('/auth/signin');
@@ -62,9 +123,22 @@ const Profile = () => {
   return (
     <>
       <Header />
-      <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-semibold mb-4">Profile</h2>
+      <div className="container mx-auto px-4 my-10">
         <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+          <div className='mb-8 mx-32'>
+            { selectedFile ? (
+              <img src={selectedFile} alt="" className='h-32  w-32 rounded-full object-cover border p-[4px]' />
+            ):
+            
+            (
+            <img src={user?.photoURL} className="h-32  w-32 rounded-full object-cover border p-[4px]" alt="" />
+            
+            )
+}
+
+          <span className='text-sm text-blue-700 cursor-pointer' onClick={() => filePickerRef.current.click()}>Edit Profile picture</span>
+            </div>
+          
           <div className="mb-4">
             <label htmlFor="username" className="block mb-1">
               Username
@@ -93,7 +167,7 @@ const Profile = () => {
 
           <div className="mb-4">
             <label htmlFor="password" className="block mb-1">
-              OldPassword
+              Old Password
             </label>
             <input
               type="password"
@@ -120,16 +194,29 @@ const Profile = () => {
           
         
           <div className="mb-4">
-            <label htmlFor="image" className="block mb-1">
-              Change Profile Image
-            </label>
-            <input type="file" id="image" accept="image/*" />
+            
+            <input
+                  ref={filePickerRef}
+                  type="file"
+                  hidden
+                  onChange={addImage}
+                />
           </div>
-          <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+          <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded ">
             Save Changes
           </button>
         </form>
       </div>
+
+      {showSnackbar && (
+        <div
+          className={`fixed top-20 right-4 p-4 rounded-lg text-white ${
+            snackbarColor === 'green' ? 'bg-green-500' : 'bg-red-500'
+          }`}
+        >
+          {snackbarColor === 'green' ? 'profile Updated Successfully' : 'Update Failed'}
+        </div>
+      )}
     </>
   );
 };

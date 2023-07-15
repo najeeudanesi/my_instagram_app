@@ -6,9 +6,9 @@ import React, { useRef, useState } from "react";
 import {ref, getDownloadURL, uploadString} from "@firebase/storage";
 import { db, storage } from "../firebase";
 
-const Modal = ({ isvisible, onClose }) => {
+const Modal = ({ isvisible, onClose, user}) => {
   if (!isvisible) return null;
-  const { data: session } = useSession();
+ 
   const filePickerRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -25,9 +25,9 @@ const Modal = ({ isvisible, onClose }) => {
     // get a download URL from the storage and update the post with the image
 
     const docRef = await addDoc(collection(db, "posts"), {
-      username: session.user.username,
+      username: user.displayName,
       captionRef: captionRef.current.value,
-      profileImg: session.user.image,
+      profileImg: user.photoURL,
       timestamp: serverTimestamp(),
     });
 
