@@ -64,14 +64,7 @@ export default function Header() {
               objectFit="contain"
             />
           </div>
-          <div className="relative w-10 lg:hidden flex-shrink-0 cursor-pointer" onClick={() => router.push("/")}>
-            <Image
-              src="https://links.papareact.com/jjm"
-              layout="fill"
-              alt=""
-              objectFit="contain"
-            />
-          </div>
+         
 
           {/*search bar*/}
           <div className="max-w-xs">
@@ -81,7 +74,7 @@ export default function Header() {
               </div>
 
               <input
-                className="bg-gray-50 block w-3/4 md:w-full  pl-10 text-xs
+                className="bg-gray-50 block w-full  pl-7 text-xs
             border-gray-300 focus:ring-black focus:border-black rounded-md"
                 type={"text"}
                
