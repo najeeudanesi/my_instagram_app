@@ -125,7 +125,8 @@ const Profile = () => {
       <Header />
       <div className="container mx-auto px-4 my-10">
         <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-          <div className='mb-8 mx-32'>
+          <div className='flex items-center justify-center space-x-4'>
+            <div>
             { selectedFile ? (
               <img src={selectedFile} alt="" className='h-32  w-32 rounded-full object-cover border p-[4px]' />
             ):
@@ -137,6 +138,7 @@ const Profile = () => {
 }
 
           <span className='text-sm text-blue-700 cursor-pointer' onClick={() => filePickerRef.current.click()}>Edit Profile picture</span>
+          </div>
             </div>
           
           <div className="mb-4">

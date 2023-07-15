@@ -81,7 +81,7 @@ export default function Header() {
               </div>
 
               <input
-                className="bg-gray-50 block  lg:w-full  pl-10 text-xs
+                className="bg-gray-50 block w-3/4 md:w-full  pl-10 text-xs
             border-gray-300 focus:ring-black focus:border-black rounded-md"
                 type={"text"}
                
@@ -121,7 +121,7 @@ export default function Header() {
                   onClick={() => router.push("/profile")}
                   src={user?.photoURL}
                   alt="profile pic"
-                  className="h-10  w-10 rounded-full hover:cursor-pointer object-cover"
+                  className="md:h-10  md:w-10  h-6 w-6 rounded-full hover:cursor-pointer object-cover"
                 />
               </>
             ) : (
