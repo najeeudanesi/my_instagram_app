@@ -86,6 +86,11 @@ export default function Header() {
           {/*right*/}
           <div className=" flex items-center justify-end space-x-4">
             <HomeIcon onClick={() => router.push("/")} className="navBtn" />
+            
+            <GlobeAltIcon
+                  className="navBtn"
+                  onClick={() => router.push("/explore")}
+                />
            
             {user ? (
               <>
@@ -100,10 +105,6 @@ export default function Header() {
                   </div>
                 </div>
 
-                <GlobeAltIcon
-                  className="navBtn"
-                  onClick={() => router.push("/explore")}
-                />
                 <PlusCircleIcon
                   onClick={() => setOpen(true)}
                   className="navBtn"

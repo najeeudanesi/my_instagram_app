@@ -136,9 +136,9 @@ function Post({ id, username, img, caption, userImg}) {
             className="flex items-center space-x-2 mb-3">
             
               <img className="h-7 w-7 rounded-full object-cover" src={comment.data().userImage} alt="" />
-              <span className="font-semibold"> {comment.data().username}</span>
+              <span className="font-semibold text-sm"> {comment.data().username}</span>
               <p>{comment.data().comment}</p>
-              <Moment fromNow className="pr-5 text-xs text-gray-700">
+              <Moment fromNow className="pr-5 text-xs text-gray-600">
                 {comment.data().timestamp?.toDate()}
               </Moment>
             </div>

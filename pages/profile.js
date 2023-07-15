@@ -1,5 +1,5 @@
 import  { useEffect, useRef, useState } from 'react';
-import { onAuthStateChanged, signInWithEmailAndPassword, updatePassword, updateProfile } from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut, updatePassword, updateProfile } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { auth, db, storage } from '../firebase';
 import Header from '../components/Header';
@@ -106,6 +106,7 @@ const Profile = () => {
     
   };
 
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -118,12 +119,14 @@ const Profile = () => {
          router.push('/auth/signin');
       }
     });
+
+
   }, []);
 
   return (
     <>
       <Header />
-      <div className="container mx-auto px-4 my-10">
+      <div className="container mx-auto px-4 mt-10 mb-4">
         <form onSubmit={handleSubmit} className="max-w-md mx-auto">
           <div className='flex items-center justify-center space-x-4'>
             <div>
@@ -204,11 +207,19 @@ const Profile = () => {
                   onChange={addImage}
                 />
           </div>
+          <div className='flex justify-end'>
           <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded ">
             Save Changes
           </button>
+          </div>
+          <div className='flex justify-center mt-4 font-bold text-red-700 cursor-pointer' onClick={() => signOut(auth)}> Sign out of your account</div>
         </form>
+   
+       
       </div>
+    
+
+     
 
       {showSnackbar && (
         <div
