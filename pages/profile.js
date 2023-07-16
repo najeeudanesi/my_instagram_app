@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { auth, db, storage } from '../firebase';
 import Header from '../components/Header';
 import {ref, getDownloadURL, uploadString} from "@firebase/storage";
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { async } from 'react-input-emoji';
 
 const Profile = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -17,14 +18,29 @@ const Profile = () => {
   const filePickerRef = useRef(null);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarColor, setSnackbarColor] = useState('');
+  const [loading, setLoading] = useState(false);
 
 
+  const storeUserData = async (e) => {
+    if(user){
+      const q = query(collection(db, 'users'), where('id', '==', user.uid));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        console.log('User not found.');
+        return;
+      }
 
+      const userDoc = querySnapshot.docs[0].ref;
+
+    await updateDoc(userDoc ,{
+      email: email,
+      username: username,
+      profileImg: user.photoURL,
+    })
+  }
+  }
 
   const updateImage = async (e) => {
-
-    
-
   const docRef = await addDoc(collection(db, "user_images"), {
     email: email,
   })
@@ -63,6 +79,9 @@ const Profile = () => {
   };
 
   const handleSubmit = async (e) => {
+    if (loading) return;
+
+    setLoading(true);
     e.preventDefault();
     if(password!==''){ try{
        await  signInWithEmailAndPassword(auth, email, oldPassword).then(() =>{
@@ -85,12 +104,24 @@ const Profile = () => {
             email: email,  
         })
 
-        await updateImage().then(() =>{
+        
+
+        await updateImage();
+        
+        await storeUserData().then(() =>{
             console.log("image updated successfully")
             setShowSnackbar(true);
             setSnackbarColor('green');
+
             
-        });
+    setLoading(false);
+    setSelectedFile(null);
+            
+        })
+
+
+
+      
     }catch(error){
         console.error(error)
 
@@ -121,7 +152,7 @@ const Profile = () => {
     });
 
 
-  }, []);
+  }, [db]);
 
   return (
     <>
@@ -208,8 +239,10 @@ const Profile = () => {
                 />
           </div>
           <div className='flex justify-end'>
-          <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded ">
-            Save Changes
+          <button type="submit"
+          disabled={loading}
+          className="bg-blue-500 text-white py-2 px-4 rounded   disabled:bg-gray-300 disabled:cursor-not-allowed hover:disabled:bg-gray-300">
+          {loading ? "Saving..." : "Save"}
           </button>
           </div>
           <div className='flex justify-center mt-4 font-bold text-red-700 cursor-pointer' onClick={() => signOut(auth)}> Sign out of your account</div>

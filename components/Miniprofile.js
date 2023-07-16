@@ -1,8 +1,10 @@
 import { getAuth, signOut } from 'firebase/auth'
 import React from 'react'
 import { app } from '../firebase'
+import { useRouter } from 'next/router'
 
 function Miniprofile(user) {
+  const router = useRouter();
 
   const auth = getAuth(app)
   console.log(user.user);
@@ -14,7 +16,7 @@ function Miniprofile(user) {
             <h2 className='font-bold'>{user.user.displayName}</h2>
             <h3 className='text-sm text-gray-400'>Welcome to instagram</h3>
         </div>
-        <button onClick={() => signOut(auth)} className='text-blue-400 text-sm font-semibold'>Sign out</button>
+        <button onClick={() => signOut(auth).then(() => {router.push('/auth/signin')})} className='text-blue-400 text-sm font-semibold'>Sign out</button>
     </div>
   )
 }

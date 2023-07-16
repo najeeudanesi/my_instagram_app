@@ -22,6 +22,8 @@ useEffect(() => {
     if (user) {
       setUser(user);
       router.push("/")
+    }else{
+    
     }
   });
 
@@ -45,7 +47,7 @@ useEffect(() => {
           { user && (
              <div className="fixed top-20">
              <Miniprofile user={user}/>
-             <Suggestions/>
+             <Suggestions user={user}/>
              </div>
           )}
          

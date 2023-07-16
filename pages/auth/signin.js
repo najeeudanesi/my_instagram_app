@@ -1,22 +1,24 @@
 import { useRouter } from 'next/router';
-import { getProviders, signIn } from 'next-auth/react';
 import Header from '../../components/Header';
 
-import { useState} from 'react';
-import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { useEffect, useState} from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../../firebase';
 
 function SignIn({ providers }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarColor, setSnackbarColor] = useState('');
+  const [user, setUser] = useState(null);
 
   const router = useRouter();
+
 
   const handleSignIn = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+   
       setShowSnackbar(true);
       setSnackbarColor('green');
       router.push('/');
@@ -27,7 +29,11 @@ function SignIn({ providers }) {
     }
   };
 
+
+ 
+
   
+
 
   return (
     <>

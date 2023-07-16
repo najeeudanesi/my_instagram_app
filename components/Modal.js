@@ -25,9 +25,8 @@ const Modal = ({ isvisible, onClose, user}) => {
     // get a download URL from the storage and update the post with the image
 
     const docRef = await addDoc(collection(db, "posts"), {
-      username: user.displayName,
+      uid:user.uid,
       captionRef: captionRef.current.value,
-      profileImg: user.photoURL,
       timestamp: serverTimestamp(),
     });
 
@@ -73,7 +72,7 @@ const Modal = ({ isvisible, onClose, user}) => {
             {selectedFile ? (
               <img
                 src={selectedFile}
-                className="w-full object-contain cursor-pointer"
+                className="w-full object-cover max-h-96 cursor-pointer"
                 onClick={() => setSelectedFile(null)}
                 alt=""
               />

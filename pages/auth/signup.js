@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/router";
+import { addDoc, collection, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import Header from "../../components/Header";
 import "../../firebase";
 import {
@@ -7,7 +8,7 @@ import {
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +16,23 @@ const Signup = () => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const [user, setUser] = useState(null);
+
+
+  const  addUser = async (newUser) => {
+    console.log(newUser)
+    try {
+      await  addDoc(collection(db, 'users'), {
+        email: newUser.email,
+        id: newUser.uid,
+        username: newUser.displayName,
+        profileImg: newUser.photoURL,
+        createdAt: serverTimestamp(),
+      })
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleSignup = async () => {
     try {
@@ -23,37 +41,34 @@ const Signup = () => {
         return;
       }
 
-      await createUserWithEmailAndPassword(auth, email, password).then(
-        (response) => {
-          sessionStorage.setItem(
-            "Auth Token",
-            response._tokenResponse.refreshToken
-          );
-
-          onAuthStateChanged(auth, (user) => {
-            if (user) {
-              updateProfile(user, {
+   const newUserCred =  await createUserWithEmailAndPassword(auth, email, password)
+          
+   const newUser = newUserCred.user;
+   
+          
+         await   updateProfile(newUser, {
                 displayName: username,
                 photoURL:
                   "https://firebasestorage.googleapis.com/v0/b/instagram-2-5d577.appspot.com/o/user_images%2FOIP%20(1).jpg?alt=media&token=2254d8cf-cf23-4255-8e25-eae5cbb8632c",
+              }).then(() => {
+                sessionStorage.setItem('Auth Token', newUserCred._tokenResponse.refreshToken)
+                addUser(newUser);
+                router.push("/");
               })
-                .then(() => {
-                  // Profile updated successfully
-                })
-                .catch((error) => {
-                  // Handle error while updating profile
-                  console.log(error);
-                });
-            }
-          });
-        }
-      );
-      router.push("/");
-    } catch (error) {
+               
+             
+        } 
+      catch(error) {
       setError(error.message);
     }
   };
 
+  useEffect(() => {
+    return onSnapshot(
+      collection(db, "users"),(snapshot) => setUser(snapshot.docs)
+    )
+  },[db]
+  )
   return (
     <>
       <Header />

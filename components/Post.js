@@ -5,7 +5,7 @@ import {
   HeartIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/24/outline";
-import { addDoc, deleteDoc, doc, onSnapshot, orderBy, query, setDoc } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, onSnapshot, orderBy, query, setDoc, where } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { collection, serverTimestamp } from "firebase/firestore";
 import { useState, useEffect } from "react";
@@ -18,25 +18,42 @@ import {
 
 } from "@heroicons/react/24/solid"
 
-function Post({ id, username, img, caption, userImg}) {
+function Post({ id, uid, img,  caption, }) {
+
+  
 
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [ user, setUser ] = useState(null);
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
+  const [posterData, setPosterData] = useState(null);
 
   useEffect(
-    () =>
+    () =>{
       onSnapshot(
         query(
           collection(db, "posts", id, "comments"),
           orderBy("timestamp", "desc")
         ),
         (snapshot) => setComments(snapshot.docs)
-      ),
+      )
+    
+    },
     [db]
   );
+
+  useEffect(
+    () =>{
+      onSnapshot(query(
+        collection(db, "users"),
+        where("id", "==", uid)),
+      (snapshot) => setPosterData(snapshot.docs[0])
+
+      )
+    }
+  )
+
 
   useEffect(
     () => {
@@ -66,6 +83,7 @@ function Post({ id, username, img, caption, userImg}) {
   const likePost = async () => {
     if (hasLiked) {
       await deleteDoc(doc(db, "posts", id, "likes", user.uid));
+      console.log(posterData);
     }else {
       await setDoc(doc(db, "posts", id, "likes", user.uid), {
         username: user.displayName,
@@ -92,11 +110,11 @@ function Post({ id, username, img, caption, userImg}) {
 
       <div className="flex items-center p-5">
         <img
-          src={userImg}
+          src={posterData?.data().profileImg}
           className="rounded-full h-12 w-12  border p-1 mr-3 object-cover"
           alt=""
         />
-        <p className="flex-1 font-semibold">{username}</p>
+        <p className="flex-1 font-semibold">{posterData?.data().username}</p>
         <EllipsisHorizontalIcon className="h-5" />
       </div>
       <img src={img} className="object-cover w-full max-h-screen " alt="" />
@@ -124,7 +142,7 @@ function Post({ id, username, img, caption, userImg}) {
             <p className="font-bold mb-1">{likes.length} {likes.length === 1 ? "Like" : "Likes"}</p>
           )
         }
-        <span className="font-semibold mr-2">{username}</span>
+        <span className="font-semibold mr-2">{posterData?.data().username}</span>
         {caption}
       </p>
 

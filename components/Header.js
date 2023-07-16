@@ -15,11 +15,9 @@ import { Fragment, useState, useEffect } from "react";
 import {
   getAuth,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
 import { app, db } from "../firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, getDocs } from "firebase/firestore";
 
 export default function Header() {
   const auth = getAuth(app);
@@ -27,6 +25,13 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [user, setUser] = useState(null);
+
+  const fetchAllUsers = async () => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const users = querySnapshot.docs.map((doc) => doc.data());
+    console.log(users)
+    return users;
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -37,11 +42,6 @@ export default function Header() {
       }
     });
 
-    // onSnapshot(collection(db, "user_images"), (snapshot) => {
-    //   if (user){
-    //     setUser(user);
-    //   }
-    // })
 
     return () => {
       unsubscribe();
@@ -95,7 +95,7 @@ export default function Header() {
             {user ? (
               <>
                 <div className="relative">
-                  <PaperAirplaneIcon className="navBtn -rotate-45" />
+                  <PaperAirplaneIcon className="navBtn -rotate-45" onClick={fetchAllUsers} />
                   <div
                     className="absolute -top-1 -right-1 text-xs w-4 bg-red-600 rounded-full text-white 
   flex items-center justify-center
