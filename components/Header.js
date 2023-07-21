@@ -11,13 +11,14 @@ import {
 import { HomeIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import Modal from "./Modal";
+import SearchPanel from "./searchPanel"
 import { Fragment, useState, useEffect } from "react";
 import {
   getAuth,
   onAuthStateChanged,
 } from "firebase/auth";
 import { app, db } from "../firebase";
-import { collection, onSnapshot, getDocs } from "firebase/firestore";
+import { collection, onSnapshot, getDocs, query } from "firebase/firestore";
 
 export default function Header() {
   const auth = getAuth(app);
@@ -25,13 +26,46 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchPanelOpen, setSearchPanelOpen] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const fetchAllUsers = async () => {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    const users = querySnapshot.docs.map((doc) => doc.data());
-    console.log(users)
-    return users;
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    
+    if(searchQuery==""){
+      setSearchPanelOpen(false)
+    }else{
+      setSearchPanelOpen(true)
+      
+    }
+   
   }
+
+  const searchUsers = () => {
+    const filteredUsers = users.filter((user) =>
+      user.data().username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredUsers(filteredUsers);
+  };
+
+  useEffect(() => {
+    if(searchQuery==""){
+      setSearchPanelOpen(false)
+    }else{
+      setSearchPanelOpen(true)
+    }
+    searchUsers() 
+  }, [searchQuery]);
+
+
+
+  useEffect(() => {
+    onSnapshot(query(collection(db, "users")), (snapshot) => {
+      setUsers(snapshot.docs);
+    })
+  }, [db])
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -77,6 +111,8 @@ export default function Header() {
                 className="bg-gray-50 block w-full  pl-7 text-xs
             border-gray-300 focus:ring-black focus:border-black rounded-md"
                 type={"text"}
+                value={searchQuery}
+                onChange={handleSearch}
                
               />
 
@@ -95,7 +131,7 @@ export default function Header() {
             {user ? (
               <>
                 <div className="relative">
-                  <PaperAirplaneIcon className="navBtn -rotate-45" onClick={fetchAllUsers} />
+                  <PaperAirplaneIcon className="navBtn -rotate-45" />
                   <div
                     className="absolute -top-1 -right-1 text-xs w-4 bg-red-600 rounded-full text-white 
   flex items-center justify-center
@@ -124,8 +160,11 @@ export default function Header() {
               </button>
             )}
           </div>
+          <SearchPanel isVisible={searchPanelOpen} onClose={() => setSearchPanelOpen(false)} users={filteredUsers}/>
           <Modal isvisible={open} onClose={() => setOpen(false)} user={user} />
+          
         </div>
+       
       </div>
     </Fragment>
   );
