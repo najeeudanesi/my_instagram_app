@@ -5,7 +5,7 @@ import { auth, db, storage } from '../firebase';
 import Header from '../components/Header';
 import {ref, getDownloadURL, uploadString} from "@firebase/storage";
 import { addDoc, collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
-import { async } from 'react-input-emoji';
+
 
 const Profile = () => {
   const [selectedFile, setSelectedFile] = useState(null);

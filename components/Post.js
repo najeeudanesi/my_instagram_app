@@ -83,7 +83,6 @@ function Post({ id, uid, img,  caption, }) {
   const likePost = async () => {
     if (hasLiked) {
       await deleteDoc(doc(db, "posts", id, "likes", user.uid));
-      console.log(posterData);
     }else {
       await setDoc(doc(db, "posts", id, "likes", user.uid), {
         username: user.displayName,
