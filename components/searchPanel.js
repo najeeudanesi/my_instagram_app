@@ -11,7 +11,7 @@ import React from 'react'
     <ul>
         
       {
-        users.map((user) => (<li>
+        users.map((user) => (<li key={user.id}>
             <div className='flex items-center justify-center mt-3 cursor-pointer'onClick={() => router.push(`/${user.data().username}`).then(() => onClose())} >
             
             <img src={user.data().profileImg} className='w-10 h-10 rounded-full border p-[2px]' alt=''></img>

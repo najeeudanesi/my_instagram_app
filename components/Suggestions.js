@@ -40,24 +40,21 @@ export const Suggestions = (user) => {
     //   setSuggestions(users);
     // }, [])
 
-    const getDocID = (id) => {
-      onSnapshot(query(collection(db, "users"),where("id", "==", id)),(snapshot) => {
-       return snapshot.docs[0].id;
-      })
-   
-    }
+
      
   return (
     <div className='mt-4 ml-10'>
         <div className='flex justify-between text-sm mb-5'>
             <h3 className='text-sm font-bold text-gray-400'>Suggestions for you</h3>
-            {/* <button className='text-gray-600 font-semibold'>See all</button> */}
+            <button className='text-gray-600 font-semibold'>See all</button>
         </div>
 
         {
           suggestions &&  suggestions.map(profile => (
                 <div key={profile.id}>
-                    <Suggestion docID={profile.id} uid={uid} id={profile.id} img={profile.profileImg} username={profile.username}/>
+
+                  
+                    <Suggestion uid={uid} id={profile.id} img={profile.profileImg} username={profile.username}/>
                 </div>
             ))
         }

@@ -3,14 +3,21 @@ import { useState, useEffect } from "react";
 import { addDoc, collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { onAuthStateChanged } from 'firebase/auth';
-export const  Suggestion = ({docID, uid, id, img, username}) => {
+export const  Suggestion = ({ uid, id, img, username}) => {
 
     const [hasFollowed, setHasFollowed] = useState(false)
     const [followers, setFollowers] = useState([])
     const [ user, setUser ] = useState(null);
     const [userDocID, setUserDocID] = useState(null);
-
+    const [docID, setDocID] = useState(null);
     
+
+    const getDocID = (id) => {
+      onSnapshot(query(collection(db, "users"),where("id", "==", id)),(snapshot) => {
+        setDocID(snapshot.docs[0].id);
+      })
+   
+    }
 
     useEffect(
         () =>{
@@ -25,15 +32,22 @@ export const  Suggestion = ({docID, uid, id, img, username}) => {
 
     useEffect(
         () => {
+          
           setHasFollowed(followers.findIndex((follow) => follow.id === uid) !== -1);
+        
         }, [followers]
       )
 
+     
+
       useEffect(() => {
+        getDocID(id)
+        if(docID){
         return onSnapshot(
           collection(db, "users", docID, "followers"),(snapshot) => setFollowers(snapshot.docs)
         )
-      },[db, docID]
+        }
+      }
       )
 
       const followUser = async () => {

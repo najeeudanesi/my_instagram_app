@@ -104,7 +104,7 @@ function Post({ id, uid, img,  caption, }) {
     });
   };
   return (
-    <div className="bg-white my-7 border rounded-sm">
+    <div className="bg-white my-7 border rounded-sm w-full object-cover ">
       {/* Header */}
 
       <div className="flex items-center p-5">
@@ -116,7 +116,7 @@ function Post({ id, uid, img,  caption, }) {
         <p className="flex-1 font-semibold">{posterData?.data().username}</p>
         <EllipsisHorizontalIcon className="h-5" />
       </div>
-      <img src={img} className="object-cover w-full max-h-screen " alt="" />
+      <img src={img} className="object-cover w-[800px] max-h-[800px] " alt="" />
       {user && (
         <div className="flex justify-between px-4 pt-4">
           <div className="flex space-x-4">
