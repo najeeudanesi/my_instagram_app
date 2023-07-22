@@ -20,7 +20,6 @@ const Signup = () => {
 
 
   const  addUser = async (newUser) => {
-    console.log(newUser)
     try {
       await  addDoc(collection(db, 'users'), {
         email: newUser.email,
@@ -30,7 +29,7 @@ const Signup = () => {
         createdAt: serverTimestamp(),
       })
     } catch (error) {
-      console.error(error);
+      setError(error.message);
     }
   }
 

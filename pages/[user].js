@@ -91,7 +91,7 @@ export default function Page({ props }) {
           doc(db, "users", userDocID, "following", pageUserData?.id)
         );
         await deleteDoc(doc(db, "users", docID, "followers", user.uid));
-        console.log("unfollowed");
+       
       } else {
         await setDoc(doc(db, "users", docID, "followers", user.uid), {
           username: user.displayName,
@@ -104,7 +104,6 @@ export default function Page({ props }) {
           }
         );
 
-        console.log("followed");
       }
     }
   };

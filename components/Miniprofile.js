@@ -7,7 +7,6 @@ function Miniprofile(user) {
   const router = useRouter();
 
   const auth = getAuth(app)
-  console.log(user.user);
   return (
     <div className='flex items-center justify-between mt-14 ml-10'>
         <img className='rounded-full object-cover border p-[2px] w-16 h-16' src={user?.user?.photoURL} alt="" />

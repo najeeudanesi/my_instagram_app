@@ -30,7 +30,6 @@ const Modal = ({ isvisible, onClose, user}) => {
       timestamp: serverTimestamp(),
     });
 
-    console.log("new doc added", docRef.id);
 
     const imagRef = ref(storage, `posts/${docRef.id}/image`);
 

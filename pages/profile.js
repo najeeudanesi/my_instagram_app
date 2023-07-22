@@ -26,7 +26,7 @@ const Profile = () => {
       const q = query(collection(db, 'users'), where('id', '==', user.uid));
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) {
-        console.log('User not found.');
+        
         return;
       }
 
@@ -52,9 +52,6 @@ const Profile = () => {
       const downloadURL = await getDownloadURL(imagRef);
       await  updateProfile((user), {
        photoURL: downloadURL,
-    }).then(() => {
-        console.log("image updated successfully")
-        
     })
     })
   }
@@ -86,13 +83,13 @@ const Profile = () => {
     if(password!==''){ try{
        await  signInWithEmailAndPassword(auth, email, oldPassword).then(() =>{
              updatePassword((user), password).then(() =>{
-                console.log("password changed")
+             
                 setOldPassword(null);
                 setPassword(null);
             })
         })
      } catch (error) {
-        console.error(error)
+       
         setShowSnackbar(true);
         setSnackbarColor('red');
         return;
@@ -109,7 +106,7 @@ const Profile = () => {
         await updateImage();
         
         await storeUserData().then(() =>{
-            console.log("image updated successfully")
+      
             setShowSnackbar(true);
             setSnackbarColor('green');
 
@@ -123,7 +120,7 @@ const Profile = () => {
 
       
     }catch(error){
-        console.error(error)
+
 
         setShowSnackbar(true);
         setSnackbarColor('red');

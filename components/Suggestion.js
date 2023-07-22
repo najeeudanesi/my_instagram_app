@@ -55,7 +55,7 @@ export const  Suggestion = ({ uid, id, img, username}) => {
         
         await deleteDoc(doc(db, "users", userDocID, "following", id));
           await deleteDoc(doc(db, "users", docID, "followers", uid));
-          console.log("unfollowed")
+          
         }else {
           await setDoc(doc(db, "users", docID, "followers", uid), {
             username: user.displayName,
@@ -65,7 +65,6 @@ export const  Suggestion = ({ uid, id, img, username}) => {
             username: username
           })
 
-          console.log("followed")
         }
         
       }
