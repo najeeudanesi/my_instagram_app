@@ -88,6 +88,7 @@ export const  Suggestion = ({ uid, id, img, username}) => {
                     <h2 className='font-semibold text-sm'>{username}</h2>
                     <h3 className='text-xs text-gray-400'>Based on people you know</h3>
                 </div>
+                
                 {
                     hasFollowed ? (
                      <button className='text-blue-400 text-sm font-bold w-16' onClick={followUser}>Following</button> ):(
