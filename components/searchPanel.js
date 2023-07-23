@@ -7,7 +7,7 @@ import React from 'react'
    const router = useRouter();
   return (
 <div className='fixed inset-y-16 inset-x-4 flex justify-center items-center'>
-  <div className='bg-white rounded-md outline outline-3 outline-gray-200 w-11/12 md:w-1/2 h-full mx-auto flex flex-col text-black font-bold'>
+  <div className='overflow-hidden bg-white rounded-md outline outline-3 outline-gray-200 w-11/12 md:w-1/2 h-full mx-auto flex flex-col text-black font-bold'>
     <ul>
         
       {
