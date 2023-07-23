@@ -4,6 +4,7 @@ import {
   EllipsisHorizontalIcon,
   HeartIcon,
   PaperAirplaneIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { addDoc, deleteDoc, doc, onSnapshot, orderBy, query, setDoc, where } from "firebase/firestore";
 import { auth, db } from "../firebase";
@@ -90,6 +91,14 @@ function Post({ id, uid, img,  caption, }) {
     }
     
   }
+
+  //delete doc
+const deletePost = async () =>{
+
+  await deleteDoc(doc(db, "posts", id));
+
+}
+
   const sendComment = async (e) => {
     e.preventDefault();
 
@@ -114,7 +123,18 @@ function Post({ id, uid, img,  caption, }) {
           alt=""
         />
         <a href={`/${posterData?.data().username}`} className="flex-1 font-semibold">{posterData?.data().username}</a>
-        <EllipsisHorizontalIcon className="h-5" />
+
+        {
+          user?.uid === uid ? (
+            <XCircleIcon className="h-5 cursor-pointer" onClick={deletePost} />
+          ):(
+            <EllipsisHorizontalIcon className="h-5" />
+          )
+        }
+
+       
+
+
       </div>
       <img src={img} className="object-cover w-[800px] max-h-[800px] " alt="" />
       {user && (
