@@ -27,6 +27,8 @@ export default function Page({ props }) {
   const [posts, setPosts] = useState([]);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [pageMessage, setPageMessage] = useState('loading.....');
 
   //handle follow and unfollow
 
@@ -49,9 +51,10 @@ export default function Page({ props }) {
   });
 
   useEffect(() => {
+    if (user){
     setHasFollowed(
       followers.findIndex((follow) => follow.id === user.uid) !== -1
-    );
+    );}
   }, [followers]);
 
   //get followers
@@ -85,7 +88,8 @@ export default function Page({ props }) {
   },[db, followingCount, docID]);
 
   const followUser = async () => {
-    if (docID && userDocID) {
+    setLoading(true);
+    if (docID && userDocID && user) {
       if (hasFollowed) {
         await deleteDoc(
           doc(db, "users", userDocID, "following", pageUserData?.id)
@@ -106,6 +110,7 @@ export default function Page({ props }) {
 
       }
     }
+    setLoading(false);
   };
 
   //get current user data
@@ -115,6 +120,7 @@ export default function Page({ props }) {
         setUser(user);
       } else {
         setUser(null);
+        
       }
     });
   });
@@ -130,8 +136,12 @@ export default function Page({ props }) {
       onSnapshot(
         query(collection(db, "users"), where("username", "==", username)),
         (snapshot) => {
+          if(snapshot.docs.length > 0){
           setPageUserData(snapshot.docs[0]?.data());
           setDocID(snapshot.docs[0]?.id);
+        }else{
+          setPageMessage('user does not exist');
+        }
         }
       );
     }
@@ -163,25 +173,36 @@ export default function Page({ props }) {
               className="h-32  w-32 rounded-full object-cover border p-[4px]"
             />
 
-            {username !== user?.displayName ? (
-              hasFollowed ? (
-                <button
-                  onClick={followUser}
-                  className="bg-blue-500 text-white rounded-md w-32 px-4 py-2  mt-5"
-                >
-                  Following
-                </button>
-              ) : (
-                <button
-                  onClick={followUser}
-                  className="bg-blue-500 text-white rounded-md w-32 px-4 py-2  mt-5"
-                >
-                  Follow
-                </button>
-              )
-            ) : (
-              <></>
-            )}
+            {
+              !loading ? ( <>
+                {(username !== user?.displayName) && user ? (
+                  hasFollowed ? (
+                    <button
+                      onClick={followUser}
+                      className="bg-blue-500 text-white rounded-md w-32 px-4 py-2  mt-5"
+                    >
+                      Following
+                    </button>
+                  ) : (
+                    <button
+                      onClick={followUser}
+                      className="bg-blue-500 text-white rounded-md w-32 px-4 py-2  mt-5"
+                    >
+                      Follow
+                    </button>
+                  )
+                ) : (
+                  <></>
+                )}
+                </>
+              ) : ( <button
+                disabled
+                className="bg-gray-500 text-white rounded-md w-32 px-4 py-2  mt-5"
+              >
+                Follow
+              </button>)
+            }
+            
 
             <div className=" mt-6 font-semibold">{username}</div>
 
@@ -203,7 +224,7 @@ export default function Page({ props }) {
           </section>
         </main>
       ) : (
-        <h3>user Does not exist</h3>
+        <p className="ml-20 text-2xl font-semibold">{pageMessage}</p>
       )}
     </div>
   );

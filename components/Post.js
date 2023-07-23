@@ -113,7 +113,7 @@ function Post({ id, uid, img,  caption, }) {
           className="rounded-full h-12 w-12  border p-1 mr-3 object-cover"
           alt=""
         />
-        <p className="flex-1 font-semibold">{posterData?.data().username}</p>
+        <a href={`/${posterData?.data().username}`} className="flex-1 font-semibold">{posterData?.data().username}</a>
         <EllipsisHorizontalIcon className="h-5" />
       </div>
       <img src={img} className="object-cover w-[800px] max-h-[800px] " alt="" />
